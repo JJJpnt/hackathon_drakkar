@@ -2,7 +2,7 @@
 
 try   {
     // Je me connecte à ma bdd
-    $bdd = new PDO("mysql:host=localhost:3308;dbname=rde", 'root', '', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+    $bdd = new PDO("mysql:host=localhost:3308;dbname=cnrs", 'root', '', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
     return $bdd;
     }catch(Exception $e)
     {
