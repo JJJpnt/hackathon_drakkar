@@ -1,6 +1,7 @@
 <?php
 
 class Personne {
+    
     private $_id;
     private $_nom;
     private $_quartier;
