@@ -47,33 +47,6 @@ class Personne {
         return $this->_lieu_naissance;
     }
 
-    public function setId($x) {
-        $this->_id = $x;
-    }
-
-    public function setNom($x) {
-        $this->_nom = $x;
-    }
-
-    public function setQuartier($x) {
-        $this->_quartier = $x;
-    }
-
-    public function setSexe($x) {
-        $this->_sexe = $x;
-    }
-
-    public function setFonctionMenage($x) {
-        $this->_fonction_menage = $x;
-    }
-
-    public function setProfession($x) {
-        $this->_profession = $x;
-    }
-
-    public function setLieuNaissance($x) {
-        $this->_lieu_naissance = $x;
-    }
 }
 
 ?>
