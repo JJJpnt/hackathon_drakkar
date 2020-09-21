@@ -46,7 +46,10 @@ class Personne {
     public function getLieuNaissance() {
         return $this->_lieu_naissance;
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 48ca20f34e3210f6fd5b877f4f9f8436ade44257
 }
 
 ?>
