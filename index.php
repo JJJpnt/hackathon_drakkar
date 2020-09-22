@@ -106,11 +106,40 @@ $(document).ready(function() {
 
         // if(personneId) alert(personneId);
         if(personneId) {
-            $("#main").append(
-                "<div class='card col-4'><div class='card-img-top' src='...' alt='Card image cap'><div class='card-body'>    <h5 class='card-title'>"+personneName+"</h5>    <p class='card-text'>Some quick example text to build on the card title and make up the bulk of the card's content.</p>    <a href='#' class='btn btn-primary'>Go somewhere</a></div></div>"
-            );            
-        }
 
+            $.get("getOnePerson.php", {idPersonne:personneId}, function(res) {
+                // dataList.empty();
+                // console.log(res);
+                if(res) {
+                    alert
+                    console.log(res);
+                    $("#main").append(
+                        "<div class='card col-4' style='max-height: 20rem'><div class='card-img-top' src='...' alt='Card image cap'><div class='card-body' style='max-height: 30rem'>    <h5 class='card-title'>"+res['_nom']+"</h5>    <p class='card-text'><p class='mb-1'>"+res['_sexe']+"</p><p class='mb-1'>"+res['_quartier']+"</p><p class='mb-1'>"+res['_fonction_menage']+"</p><p class='mb-1'>"+res['_profession']+"</p><p class='mb-1'>Né.e à : "+res['_lieu_naissance']+"</p></p>    <a href='#' class='btn btn-primary'>Enfants</a></div></div>"
+                    );            
+                    // for(var i=0, len=res.length; i<len; i++) {
+                    //     var opt = $("<option></option>");
+                    //     var span = $("<span></span>");
+                    //     $(opt).append(span);
+                    //     $(span).attr("value", res[i]['_id']);
+                    //     $(span).attr("id", "anOption");
+                    //     // console.log(span);
+                    //     // var opt = $("<option><span></span></option>").attr("value", res[i]['_id']);
+                    //     $(span).data("id", res[i]['_id']);
+                    //     $(span).html('(' + res[i]['_id'] + ') ' + res[i]['_nom']);
+                    //     // console.log(res[i]['_nom']);
+
+                    //     dataList.append(opt);
+                    }
+
+                }
+            ,"json");
+
+
+
+
+
+
+        }
 
     });
 
