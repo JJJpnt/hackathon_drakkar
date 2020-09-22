@@ -1,7 +1,7 @@
 <?php
 
 require_once('include/connexion.php');
-require_once('classes/Personne.php');
+require_once('Entity/Personne.php');
 
 $test = $bdd->prepare("SELECT * FROM cnrs.table_lien_bms 
                         WHERE Fonction IN ('père','mère','Role_Principal')
@@ -33,25 +33,29 @@ while($data = $test->fetch()) {
     array_push($tmp, $personne);
 }
 
+var_dump($tmp);
+
 $test->closeCursor();
 
 $tmp2 = [];
 
-foreach($tmp as $personne) {
-    $id = $personne->getId();
-    $infos = $bdd->prepare("SELECT DISTINCT id_individu FROM recensement_population WHERE id_individu = '$id'");
-    $infos->execute();
+// foreach($tmp as $personne) {
+    // $id = $personne->getId();
+    $id = 9242;
+    $infos = $bdd->prepare("SELECT * FROM recensement_population WHERE id_individu = :id LIMIT 1" ) ;
+    $infos->execute(array('id' => $_GET['idPersonne']));
 
     while($data = $infos->fetch()) {
-        $personne = new Personne($data['id_individu'], $data['Nom'], $data['quartier'], $data['Sexe'], $data['fonction_menage'], $data['profession'], $data['lieu_de_naissance']);
+        $personne = new Personne($data['id_individu'], $data['nom'], $data['quartier'], $data['Sexe'], $data['fonction_menage'], $data['profession'], $data['lieu_de_naissance']);
         array_push($tmp2, $personne);
     }
     $infos->closeCursor();
-}
+// }
 
 foreach($tmp2 as $personne) {
-    echo $personne->getId();
-    echo "<br>";
+    // echo $personne->getId();
+    // echo "<br>";
+    var_dump($personne);
 }
 
 ?>
