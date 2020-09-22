@@ -4,13 +4,13 @@
 
 class Personne {
     
-    private $_id;
-    private $_nom;
-    private $_quartier;
-    private $_sexe;
-    private $_fonction_menage;
-    private $_profession;
-    private $_lieu_naissance;
+    public $_id;
+    public $_nom;
+    public $_quartier;
+    public $_sexe;
+    public $_fonction_menage;
+    public $_profession;
+    public $_lieu_naissance;
 
     public function __construct($id, $nom, $quartier, $sexe, $fonction_menage, $profession, $lieu_naissance) {
         $this->_id = $id;
