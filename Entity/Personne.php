@@ -1,5 +1,7 @@
 <?php
 
+// namespace Entity;
+
 class Personne {
     
     private $_id;
