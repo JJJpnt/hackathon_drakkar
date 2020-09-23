@@ -5,16 +5,16 @@ require_once 'Entity/Personne.php';
 
 // var_dump($_GET['name']);
 
-if(isset($_GET['idPersonne'])) {
+if(isset($_GET['idPerson'])) {
 
     // $results = [];
     // $input = 32277;
-    $input = $_GET['idPersonne'];
+    $input = $_GET['idPerson'];
 
     $stmt = $bdd->prepare(
     "SELECT * FROM cnrs.table_lien_bms 
     WHERE id_individu = '$input'
-    AND Fonction IN ('mère', 'père')
+    AND Fonction = 'Role_Principal'
     AND id_événement IN
         (
             SELECT id_événement FROM cnrs.bms WHERE Type_evt = 'Baptême'
@@ -30,26 +30,24 @@ if(isset($_GET['idPersonne'])) {
         $evts[] = $p['id_événement'];
     }
 
-    // var_dump($evts); 
-
     $results = [];
 
     foreach($evts as $idEvt) {
         
-        $sql_children = "SELECT * FROM table_lien_bms       
+        $sql_parents = "SELECT * FROM table_lien_bms       
                         WHERE id_événement = :idEvt
-                        AND Fonction = 'Role_Principal'
+                        AND Fonction IN ('mère', 'père')
         ";
     
-        $stmt_children = $bdd->prepare($sql_children);
+        $stmt_parents = $bdd->prepare($sql_parents);
     
-        $stmt_children->execute(array(
+        $stmt_parents->execute(array(
             ':idEvt' => $idEvt
         ));
 
 
         
-        while ( $p = $stmt_children->fetch() ) {
+        while ( $p = $stmt_parents->fetch() ) {
     
             // var_dump($p);
     
@@ -84,7 +82,10 @@ if(isset($_GET['idPersonne'])) {
     
     echo json_encode($results);
 
-}
+// }
+
+
+
 
 
 

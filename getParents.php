@@ -5,21 +5,21 @@ require_once 'Entity/Personne.php';
 
 // var_dump($_GET['name']);
 
-// if(isset($_GET['name'])) {
+if(isset($_GET['idPersonne'])) {
 
     // $results = [];
     // $input = 32277;
-    $input = 32012;
+    $input = $_GET['idPersonne'];
 
     $stmt = $bdd->prepare(
-    "SELECT * FROM cnrs.table_lien_bms 
-    WHERE id_individu = '$input'
-    AND Fonction = 'Role_Principal'
-    AND id_événement IN
-        (
-            SELECT id_événement FROM cnrs.bms WHERE Type_evt = 'Baptême'
-        )
-    ");
+        "SELECT * FROM cnrs.table_lien_bms 
+        WHERE id_individu = '$input'
+        AND Fonction = 'Role_Principal'
+        AND id_événement IN
+            (
+                SELECT id_événement FROM cnrs.bms WHERE Type_evt = 'Baptême'
+            )
+        ");
 
     $evts = [];
 
@@ -30,24 +30,26 @@ require_once 'Entity/Personne.php';
         $evts[] = $p['id_événement'];
     }
 
+    // var_dump($evts); 
+
     $results = [];
 
     foreach($evts as $idEvt) {
         
-        $sql_parents = "SELECT * FROM table_lien_bms       
+        $sql_children = "SELECT * FROM table_lien_bms       
                         WHERE id_événement = :idEvt
                         AND Fonction IN ('mère', 'père')
         ";
     
         $stmt_parents = $bdd->prepare($sql_parents);
     
-        $stmt_parents->execute(array(
+        $stmt_children->execute(array(
             ':idEvt' => $idEvt
         ));
 
 
         
-        while ( $p = $stmt_parents->fetch() ) {
+        while ( $p = $stmt_children->fetch() ) {
     
             // var_dump($p);
     
@@ -82,10 +84,7 @@ require_once 'Entity/Personne.php';
     
     echo json_encode($results);
 
-// }
-
-
-
+}
 
 
 
