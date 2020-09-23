@@ -5,11 +5,11 @@ require_once 'Entity/Personne.php';
 
 // var_dump($_GET['name']);
 
-// if(isset($_GET['name'])) {
+if(isset($_GET['idPersonne'])) {
 
     // $results = [];
     // $input = 32277;
-    $input = 32276;
+    $input = $_GET['idPersonne'];
 
     $stmt = $bdd->prepare(
     "SELECT * FROM cnrs.table_lien_bms 
@@ -30,7 +30,7 @@ require_once 'Entity/Personne.php';
         $evts[] = $p['id_événement'];
     }
 
-    var_dump($evts); 
+    // var_dump($evts); 
 
     $results = [];
 
@@ -84,10 +84,7 @@ require_once 'Entity/Personne.php';
     
     echo json_encode($results);
 
-// }
-
-
-
+}
 
 
 

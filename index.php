@@ -28,6 +28,8 @@ $pr = new PersonneRepository($bdd);
 <script>
 $(document).ready(function() {
 
+    var minGen = 0;
+    var maxGen = 0
 
     function search() {
 
@@ -94,6 +96,67 @@ $(document).ready(function() {
     //     console.log(e);
     // });
 
+    function getEnfants(personneId){
+                        // var personneId = $("#data").data("id");
+                        // generation=0;
+
+                        alert("getenfants"+personneId);
+                        // console.log(this);
+                        // var generation = $(this).parent().parent().parent().data('generation');
+                        // console.log($("#wrap").last());
+                        // var generation = $("#wrap").last().data('generation');
+                        var generation = maxGen;
+                        // var generation = 0;
+                        console.log("generation : "+generation)
+                        // var generation = $("#data").data('generation');
+                        // alert("Génération : " + generation);
+                        $.get("getChildren.php", {idPersonne:personneId}, function(res){console.log(res);addEnfant(res, generation);},"json");
+
+                        
+                    }
+
+
+
+    function addEnfant(ress, generation) {
+        // alert("addenfants");
+                            console.log("ress : "+ress.length);
+                            console.log(ress);
+                            if(ress.length>0) {
+
+                            // var generation = $("#wrap").last().data('generation');
+                            // console.log("generation"+generation)
+                            // console.log(ress);
+                            var g1 = generation+1;
+
+                            $("#wrap").append(
+                                '<div class="container-fluid d-flex justify-content-center mx-auto p-2 mx-0 bg-light w-100" id="main" data-generation="'+(generation+1)+'"></div>'
+                            );
+                            
+                            ress.forEach(function(pers){
+                                // $("div[data-generation='0']").clear();
+                                $("div[data-generation='"+g1+"']").append(
+                                    "<div data-id='"+ pers['_id'] +"' class='card col-4 m-0 p-1'style='width: 20rem'>\
+                                    <div class='card-body d-flex flex-column justify-content-around align-items-center w-100 p-0'>\
+                                        <h5 class='card-title'>"+pers['_nom']+"</h5>\
+                                        <a data-id='"+ pers['_id'] +"' 'enfants' href='#' class='btn btn-primary m-4 w-50 rounded mx-auto'>Enfants</a>\
+                                    </div>\
+                                    </div>"
+                                );
+                                $("a[data-id='"+pers['_id']+"']").click(function(){ 
+                                //      $("#data").data('generation', 0);
+                                //   $("#data").data('id', personneId);
+
+                                    getEnfants(pers['_id']);
+                                    }
+                            );
+
+                            });
+
+                            maxGen++;
+                        } else { alert("Pas d'enfants")}
+                        // $("#data").data('generation', (generation+1))
+                        }
+
 
     $("#submit").click(function(e){
 
@@ -116,12 +179,16 @@ $(document).ready(function() {
                 // dataList.empty();
                 // console.log(res);
                 if(res) {
-                    alert
+
                     console.log(res);
                         // <div class='card-img-top' src='...' alt='Card image cap'>\
                         // </div>\
                         // style='max-height: 30rem'
-                    $("#main").append(
+                    // $("div[data-generation='0']").empty();
+                    minGen = 0;
+                    $("#wrap").empty();
+                    $("#wrap").append('<div class="container-fluid d-flex justify-content-center mx-auto p-2 mx-0 bg-light w-100" id="main" data-generation="0"></div>');
+                    $("div[data-generation='0']").append(
                         "<div data-id='"+ personneId +"' class='card col-4 m-0 p-1'style='width: 20rem'>\
                         <div class='card-body d-flex flex-column justify-content-around align-items-center w-100 p-0'>\
                             <h5 class='card-title'>"+res['_nom']+"</h5>\
@@ -130,10 +197,20 @@ $(document).ready(function() {
                         </div>"
                     );
 
-                    $("#enfants").click(function(){
-                        var generation = $(this).parent().parent().parent().data('generation');
-                        alert("Génération : " + generation);
-                    });
+                    $("a[data-id='"+personneId+"']").click(function(){ 
+                        //      $("#data").data('generation', 0);
+                        //   $("#data").data('id', personneId);
+
+                             getEnfants(personneId);
+                            }
+                        // alert("mmm");
+                        // var generation = $(this).parent().parent().parent().data('generation');
+                        // // alert("Génération : " + generation);
+                        // $.get("getChildren.php", {idPersonne:personneId}, addEnfant(),"json");
+
+                        
+                    );
+
 
 
 
@@ -172,7 +249,7 @@ $(document).ready(function() {
 <body class="bg-dark">
 <datalist id="searchresults"></datalist>
 
-<input id="selectedPerson" type="hidden" data-id="null">
+<!-- <input id="data" type="hidden" data-id="null" data-generation="0"> -->
 
 
 <div class="container-fluid bg-dark ">
@@ -181,7 +258,8 @@ $(document).ready(function() {
         <input class="col-8 mx-auto" type="search" name="search" id="search" placeholder="Type Something" list="searchresults" autocomplete="off"  value="(32277)">
         <button id="submit" class="btn btn-primary col-4">Go!</button>
     </div>
-    <div class="container-fluid d-flex justify-content-center mx-auto p-2 mx-0 bg-light w-100" id="main" data-generation="0">
+    <div id="wrap">
+        
     </div>
 
 
