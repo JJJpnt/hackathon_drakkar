@@ -18,6 +18,14 @@ $pr = new PersonneRepository($bdd);
 <html>
 <head>
 <title>Test</title>
+<style>
+.card {
+    max-width: 13rem !important;
+}
+.card-title {
+    padding-left: 1rem;
+}
+</style>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -100,7 +108,7 @@ $(document).ready(function() {
                         // var personneId = $("#data").data("id");
                         // generation=0;
 
-                        alert("getenfants"+personneId);
+                        // alert("getenfants"+personneId);
                         // console.log(this);
                         // var generation = $(this).parent().parent().parent().data('generation');
                         // console.log($("#wrap").last());
@@ -115,7 +123,78 @@ $(document).ready(function() {
                         
                     }
 
+    function getParents(personneId){
+                        // var personneId = $("#data").data("id");
+                        // generation=0;
 
+                        // alert("getparents"+personneId);
+                        // console.log(this);
+                        // var generation = $(this).parent().parent().parent().data('generation');
+                        // console.log($("#wrap").last());
+                        // var generation = $("#wrap").last().data('generation');
+                        var generation = minGen;
+                        // var generation = 0;
+                        console.log("generation : "+generation)
+                        // var generation = $("#data").data('generation');
+                        // alert("Génération : " + generation);
+                        $.get("getParents.php", {idPersonne:personneId}, function(res){console.log(res);addParent(res, generation);},"json");
+
+                        
+                    }
+
+
+
+    function addParent(ress, generation) {
+        // alert("addenfants");
+                            console.log("ress : "+ress.length);
+                            console.log(ress);
+                            if(ress.length>0) {
+
+                            // var generation = $("#wrap").last().data('generation');
+                            // console.log("generation"+generation)
+                            // console.log(ress);
+                            var g1 = generation-1;
+
+                            $("#wrap").prepend(
+                                '<div class="container-fluid d-flex justify-content-center mx-auto p-2 mx-0 bg-light w-100" id="main" data-generation="'+(g1)+'"></div>'
+                            );
+                            
+                            ress.forEach(function(pers){
+                                // $("div[data-generation='0']").clear();
+                                $("div[data-generation='"+g1+"']").append(
+                                    "<div data-id='"+ pers['_id'] +"' class='card col-4 m-0 p-1'style='width: 20rem'>\
+                                    <div class='card-body d-flex flex-column justify-content-around align-items-center w-100 p-0'>\
+                                        <a data-id='"+ pers['_id'] +"' href='#' class='parents btn btn-primary m-4 w-50 rounded mx-auto'>Parents</a>\
+                                        <h5 class='card-title'>"+pers['_nom']+"</h5>\
+                                        <a data-id='"+ pers['_id'] +"' href='#' class='enfants btn btn-primary m-4 w-50 rounded mx-auto'>Enfants</a>\
+                                    </div>\
+                                    </div>"
+                                );
+
+                                $("a.enfants[data-id='"+pers['_id']+"']").click(function(){ 
+                                        getEnfants(pers['_id']);
+                                    }
+                                );
+                                $("a.parents[data-id='"+pers['_id']+"']").click(function(){ 
+                                        getParents(pers['_id']);
+                                    }
+                                );
+
+
+                            //     $("a[data-id='"+pers['_id']+"']").click(function(){ 
+                            //     //      $("#data").data('generation', 0);
+                            //     //   $("#data").data('id', personneId);
+
+                            //         getEnfants(pers['_id']);
+                            //         }
+                            // );
+
+                            });
+
+                            minGen--;
+                        } else { alert("Pas de parents")}
+                        // $("#data").data('generation', (generation+1))
+    }
 
     function addEnfant(ress, generation) {
         // alert("addenfants");
@@ -137,25 +216,40 @@ $(document).ready(function() {
                                 $("div[data-generation='"+g1+"']").append(
                                     "<div data-id='"+ pers['_id'] +"' class='card col-4 m-0 p-1'style='width: 20rem'>\
                                     <div class='card-body d-flex flex-column justify-content-around align-items-center w-100 p-0'>\
+                                        <a data-id='"+ pers['_id'] +"' href='#' class='parents btn btn-primary m-4 w-50 rounded mx-auto'>Parents</a>\
                                         <h5 class='card-title'>"+pers['_nom']+"</h5>\
-                                        <a data-id='"+ pers['_id'] +"' 'enfants' href='#' class='btn btn-primary m-4 w-50 rounded mx-auto'>Enfants</a>\
+                                        <a data-id='"+ pers['_id'] +"' href='#' class='enfants btn btn-primary m-4 w-50 rounded mx-auto'>Enfants</a>\
                                     </div>\
                                     </div>"
                                 );
-                                $("a[data-id='"+pers['_id']+"']").click(function(){ 
-                                //      $("#data").data('generation', 0);
-                                //   $("#data").data('id', personneId);
-
-                                    getEnfants(pers['_id']);
+                                $("a.enfants[data-id='"+pers['_id']+"']").click(function(){ 
+                                        getEnfants(pers['_id']);
                                     }
-                            );
+                                );
+                                $("a.parents[data-id='"+pers['_id']+"']").click(function(){ 
+                                        getParents(pers['_id']);
+                                    }
+                                );
+
+
+
+
+
+
+                            //     $("a[data-id='"+pers['_id']+"']").click(function(){ 
+                            //     //      $("#data").data('generation', 0);
+                            //     //   $("#data").data('id', personneId);
+
+                            //         getEnfants(pers['_id']);
+                            //         }
+                            // );
 
                             });
 
                             maxGen++;
                         } else { alert("Pas d'enfants")}
                         // $("#data").data('generation', (generation+1))
-                        }
+    }
 
 
     $("#submit").click(function(e){
@@ -191,24 +285,20 @@ $(document).ready(function() {
                     $("div[data-generation='0']").append(
                         "<div data-id='"+ personneId +"' class='card col-4 m-0 p-1'style='width: 20rem'>\
                         <div class='card-body d-flex flex-column justify-content-around align-items-center w-100 p-0'>\
+                            <a data-id='"+ personneId +"' href='#' class='parents btn btn-primary m-4 w-50 rounded mx-auto'>Parents</a>\
                             <h5 class='card-title'>"+res['_nom']+"</h5>\
-                            <a data-id='"+ personneId +"' 'enfants' href='#' class='btn btn-primary m-4 w-50 rounded mx-auto'>Enfants</a>\
+                            <a data-id='"+ personneId +"' href='#' class='enfants btn btn-primary m-4 w-50 rounded mx-auto'>Enfants</a>\
                         </div>\
                         </div>"
                     );
 
-                    $("a[data-id='"+personneId+"']").click(function(){ 
-                        //      $("#data").data('generation', 0);
-                        //   $("#data").data('id', personneId);
-
+                    $("a.enfants[data-id='"+personneId+"']").click(function(){ 
                              getEnfants(personneId);
                             }
-                        // alert("mmm");
-                        // var generation = $(this).parent().parent().parent().data('generation');
-                        // // alert("Génération : " + generation);
-                        // $.get("getChildren.php", {idPersonne:personneId}, addEnfant(),"json");
-
-                        
+                    );
+                    $("a.parents[data-id='"+personneId+"']").click(function(){ 
+                             getParents(personneId);
+                            }
                     );
 
 
