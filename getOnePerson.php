@@ -10,19 +10,20 @@ if(isset($_GET['idPersonne'])) {
     // $results = [];
     $input = $_GET['idPersonne'];
 
-    $infos = $bdd->prepare("SELECT * FROM recensement_population WHERE id_individu = :id" ) ;
+    // $infos = $bdd->prepare("SELECT * FROM recensement_population WHERE id_individu = :id" ) ;
+    $infos = $bdd->prepare("SELECT * FROM table_lien_bms WHERE id_individu = :id" ) ;
     $infos->execute(array('id' => $_GET['idPersonne']));
 
     while($data = $infos->fetch()) {
         $personne = new Personne(
             isset($data['id_individu'])    ?   $data['id_individu']   :   NULL, //$id, 
-            isset($data['nom'])    ?   $data['nom']   :   NULL, //$nom, 
-            isset($data['quartier'])    ?   $data['quartier']   :   NULL, //$quartier, 
-            isset($data['Sexe'])    ?   $data['Sexe']   :   NULL, //$sexe, 
-            isset($data['fonction_menage'])    ?   $data['fonction_menage']   :   NULL, //$fonction_menage,
-            // "fdp3000", //$fonction_menage,
-            isset($data['profession'])    ?   $data['profession']   :   NULL, //$datarofession, 
-            isset($data['lieu_de_naissance'])    ?   $data['lieu_de_naissance']   :   NULL, // $lieu_naissance
+            isset($data['Nom'])    ?   $data['Nom']   :   "Nom non renseigné", //$nom, 
+            // isset($data['quartier'])    ?   $data['quartier']   :   NULL, //$quartier, 
+            // isset($data['Sexe'])    ?   $data['Sexe']   :   NULL, //$sexe, 
+            // isset($data['fonction_menage'])    ?   $data['fonction_menage']   :   NULL, //$fonction_menage,
+            // // "fdp3000", //$fonction_menage,
+            // isset($data['profession'])    ?   $data['profession']   :   NULL, //$datarofession, 
+            // isset($data['lieu_de_naissance'])    ?   $data['lieu_de_naissance']   :   NULL, // $lieu_naissance
         );
     }
     $infos->closeCursor();

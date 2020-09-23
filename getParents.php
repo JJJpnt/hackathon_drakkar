@@ -5,44 +5,53 @@ require_once 'Entity/Personne.php';
 
 // var_dump($_GET['name']);
 
-if(isset($_GET['name'])) {
+// if(isset($_GET['name'])) {
 
     // $results = [];
-    $input = $_GET['name'];
+    // $input = 32277;
+    $input = 32276;
 
-    $stmt = $bdd->prepare("SELECT * FROM cnrs.table_lien_bms 
-    WHERE Fonction IN ('père','mère','Role_Principal')
-    AND  id_événement IN
+    $stmt = $bdd->prepare(
+    "SELECT * FROM cnrs.table_lien_bms 
+    AND Fonction IN ('mère', 'père')
+    WHERE id_individu = '$input'
+    AND Fonction IN ('mère', 'père')
+    AND id_événement IN
         (
             SELECT id_événement FROM cnrs.bms WHERE Type_evt = 'Baptême'
         )
-    AND id_individu IN
-    (
-        SELECT id_individu FROM cnrs.table_lien_bms WHERE id_événement IN
-            (
-                SELECT id_événement FROM cnrs.bms WHERE Type_evt = 'Baptême'
-            )
-        AND Fonction IN ('père','mère', 'Role_Principal') AND id_individu IN 
-            (
-                SELECT id_individu FROM cnrs.table_lien_bms WHERE id_événement IN
-                    (
-                        SELECT id_événement FROM cnrs.bms WHERE Type_evt = 'Baptême'
-                    )
-                AND Fonction = 'Role_Principal'
-            )
-    ) 
-    AND nom LIKE '%$input%' ");
+    ");
 
+    $evts = [];
 
-
-
-    // $sql =   "SELECT * FROM recensement_population WHERE nom LIKE '%$input%' LIMIT 100";
-    // $sql =   "SELECT * FROM recensement_population WHERE nom LIKE '%:input%' LIMIT 100";
-    // $stmt = $bdd->prepare($sql);
     $stmt->execute();
-    // $stmt->execute(array(
-    //     ':input' => $_GET['name']
-    // ));
+
+    while ( $p = $stmt->fetch() ) {
+    
+        $evts[] = $p['id_événement'];
+    }
+
+    var_dump($evts);
+
+    foreach($evts as $idEvt) {
+        
+        $sql_children = "   SELECT * FROM recensement_population r
+                            INNER JOIN
+                                    (SELECT * FROM table_lien_bms       
+                                    WHERE id_événement = :idEvt
+                                    AND Fonction = 'Role_Principal') AS l
+                                    ON r.id_individu = l.id_individu
+        ";
+    
+        $stmt_children = $bdd->prepare($sql_children);
+    
+        $stmt->execute(array(
+            ':idEvt' => $idEvt
+        ));
+
+        
+    }
+
 
     // var_dump($stmt);
 
@@ -74,7 +83,7 @@ if(isset($_GET['name'])) {
     
     echo json_encode($results);
 
-}
+// }
 
 
 

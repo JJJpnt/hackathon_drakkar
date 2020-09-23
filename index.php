@@ -104,6 +104,11 @@ $(document).ready(function() {
         console.log(personneName);
         console.log(personneId);
 
+                            // <p class='d-block align-self-start mt-0 mx-0 ml-1'>Sexe : "+res['_sexe']+"</p>\
+                            // <p class='d-block align-self-start mt-0 mx-0 ml-1'>Quartier : "+res['_quartier']+"</p>\
+                            // <p class='d-block align-self-start mt-0 mx-0 ml-1'>Fonction ménage : "+res['_fonction_menage']+"</p>\
+                            // <p class='d-block align-self-start mt-0 mx-0 ml-1'>Profession : "+res['_profession']+"</p>\
+                            // <p class='d-block align-self-start mt-0 mx-0 ml-1'>Né.e à : "+res['_lieu_naissance']+"</p>\
         // if(personneId) alert(personneId);
         if(personneId) {
 
@@ -113,9 +118,25 @@ $(document).ready(function() {
                 if(res) {
                     alert
                     console.log(res);
+                        // <div class='card-img-top' src='...' alt='Card image cap'>\
+                        // </div>\
+                        // style='max-height: 30rem'
                     $("#main").append(
-                        "<div class='card col-4' style='max-height: 20rem'><div class='card-img-top' src='...' alt='Card image cap'><div class='card-body' style='max-height: 30rem'>    <h5 class='card-title'>"+res['_nom']+"</h5>    <p class='card-text'><p class='mb-1'>"+res['_sexe']+"</p><p class='mb-1'>"+res['_quartier']+"</p><p class='mb-1'>"+res['_fonction_menage']+"</p><p class='mb-1'>"+res['_profession']+"</p><p class='mb-1'>Né.e à : "+res['_lieu_naissance']+"</p></p>    <a href='#' class='btn btn-primary'>Enfants</a></div></div>"
-                    );            
+                        "<div data-id='"+ personneId +"' class='card col-4 m-0 p-1'style='width: 20rem'>\
+                        <div class='card-body d-flex flex-column justify-content-around align-items-center w-100 p-0'>\
+                            <h5 class='card-title'>"+res['_nom']+"</h5>\
+                            <a data-id='"+ personneId +"' 'enfants' href='#' class='btn btn-primary m-4 w-50 rounded mx-auto'>Enfants</a>\
+                        </div>\
+                        </div>"
+                    );
+
+                    $("#enfants").click(function(){
+                        var generation = $(this).parent().parent().parent().data('generation');
+                        alert("Génération : " + generation);
+                    });
+
+
+
                     // for(var i=0, len=res.length; i<len; i++) {
                     //     var opt = $("<option></option>");
                     //     var span = $("<span></span>");
@@ -157,11 +178,10 @@ $(document).ready(function() {
 <div class="container-fluid bg-dark ">
 
     <div class="row mx-auto p-2 mx-0">
-        <input class="col-8 mx-auto" type="search" name="search" id="search" placeholder="Type Something" list="searchresults" autocomplete="off">
+        <input class="col-8 mx-auto" type="search" name="search" id="search" placeholder="Type Something" list="searchresults" autocomplete="off"  value="(32277)">
         <button id="submit" class="btn btn-primary col-4">Go!</button>
     </div>
-
-    <div class="row mx-auto p-2 mx-0 bg-light" style="min-height: 90vh" id="main">
+    <div class="container-fluid d-flex justify-content-center mx-auto p-2 mx-0 bg-light w-100" id="main" data-generation="0">
     </div>
 
 
